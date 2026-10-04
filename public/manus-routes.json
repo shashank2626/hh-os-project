@@ -1,0 +1,23 @@
+{
+  "routes": [
+    { "path": "/", "title": "Household OS" },
+    { "path": "/dashboard", "title": "Dashboard" },
+    { "path": "/inventory", "title": "Smart Inventory" },
+    { "path": "/inventory/:id", "title": "Inventory Item" },
+    { "path": "/inventory/smart-kitchen", "title": "Smart Kitchen & Refill" },
+    { "path": "/procurement", "title": "AI Procurement" },
+    { "path": "/assistant", "title": "AI Household Assistant" },
+    { "path": "/documents", "title": "Document Intelligence" },
+    { "path": "/documents/:id", "title": "Document Detail" },
+    { "path": "/assets", "title": "Appliances & Assets" },
+    { "path": "/assets/:id", "title": "Asset Detail" },
+    { "path": "/maintenance", "title": "Predictive Maintenance" },
+    { "path": "/tasks", "title": "Tasks & Chores" },
+    { "path": "/family", "title": "Family Coordination" },
+    { "path": "/bills", "title": "Household Bills" },
+    { "path": "/finance", "title": "Finance & Expenses" },
+    { "path": "/vendors", "title": "Local Vendor Network" },
+    { "path": "/activity", "title": "Activity Audit Feed" },
+    { "path": "/settings", "title": "System Settings" }
+  ]
+}
