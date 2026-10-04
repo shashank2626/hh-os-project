@@ -1,0 +1,35 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "npm",
+      "script": "dev",
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "typescript",
+        "pattern": "$tsc",
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": ".*Turbopack.*",
+          "endsPattern": ".*Ready in.*"
+        }
+      },
+      "label": "npm: dev",
+      "detail": "next dev"
+    },
+    {
+      "type": "npm",
+      "script": "test",
+      "problemMatcher": [],
+      "label": "npm: test",
+      "detail": "tsx tests/run-all-tests.ts"
+    },
+    {
+      "type": "npm",
+      "script": "db:seed",
+      "problemMatcher": [],
+      "label": "npm: db:seed",
+      "detail": "tsx prisma/seed.ts"
+    }
+  ]
+}

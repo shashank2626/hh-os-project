@@ -1,0 +1,423 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Household {
+  id          String   @id @default(cuid())
+  name        String   @default("Sharma Household")
+  address     String?  @default("Flat 402, Palm Heights, Powai")
+  city        String   @default("Mumbai")
+  state       String   @default("Maharashtra")
+  pincode     String   @default("400076")
+  currency    String   @default("INR")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  members         HouseholdMember[]
+  inventoryItems  InventoryItem[]
+  assets          Asset[]
+  bills           Bill[]
+  expenses        Expense[]
+  tasks           Task[]
+  documents       Document[]
+  recommendations Recommendation[]
+  activityLogs    ActivityLog[]
+  aiConversations AIConversation[]
+  cartItems       CartItem[]
+  commerceSessions CommerceSession[]
+  vendors         Vendor[]
+  serviceRequests ServiceRequest[]
+  vendorContactLogs VendorContactLog[]
+}
+
+model HouseholdMember {
+  id               String   @id @default(cuid())
+  householdId      String
+  name             String
+  role             String   @default("Member") // Admin, Member, Child, Helper, Parent
+  phone            String?
+  email            String?
+  availability     String   @default("Available") // Available, Busy, Away
+  responsibilities String?  // e.g. "Groceries, Kitchen, RO Service"
+  preferences      String?  // e.g. "Prefers morning tasks, Blinkit deliveries"
+  avatar           String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  household Household @relation(fields: [householdId], references: [id], onDelete: Cascade)
+  tasks     Task[]
+}
+
+model InventoryItem {
+  id                    String    @id @default(cuid())
+  householdId           String
+  name                  String
+  category              String    @default("Groceries") // Groceries, Dairy, Spices, Cleaning, Personal Care, Medicines, Beverages, Snacks
+  brand                 String?
+  quantity              Float     @default(1)
+  unit                  String    @default("units") // kg, g, L, ml, packs, pcs, rolls, cans
+  minimumStock          Float     @default(1)
+  consumptionRate       Float     @default(0.1) // units per day
+  estimatedDaysRemaining Int      @default(10)
+  preferredBrand        String?
+  preferredPackSize     String?
+  lastPurchasedAt       DateTime?
+  price                 Float     @default(0) // in INR
+  vendor                String?   @default("Blinkit") // Blinkit, Zepto, Swiggy Instamart, Local Kirana, Amazon
+  isLowStock            Boolean   @default(false)
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  household Household        @relation(fields: [householdId], references: [id], onDelete: Cascade)
+  events    InventoryEvent[]
+}
+
+model InventoryEvent {
+  id              String   @id @default(cuid())
+  itemId          String
+  type            String   // RESTOCK, CONSUMPTION, ADJUSTMENT, EXPIRED
+  quantityChanged Float
+  newQuantity     Float
+  notes           String?
+  createdAt       DateTime @default(now())
+
+  item InventoryItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+}
+
+model Asset {
+  id                     String    @id @default(cuid())
+  householdId            String
+  name                   String
+  category               String    @default("Appliance") // AC, Refrigerator, Washing Machine, RO Water Purifier, Geyser, TV, Microwave, Vehicle, Inverter, Chimney
+  brand                  String
+  model                  String?
+  serialNumber           String?
+  purchaseDate           DateTime?
+  purchasePrice          Float?
+  warrantyExpiresAt      DateTime?
+  warrantyPeriodMonths   Int?      @default(12)
+  lastServiceDate        DateTime?
+  nextServiceDueDate     DateTime?
+  serviceIntervalDays    Int       @default(180) // default 6 months
+  usageLevel             String    @default("Medium") // Low, Medium, Heavy
+  healthScore            Int       @default(85) // 0-100
+  riskLevel              String    @default("Good") // Good, Warning, Critical
+  location               String    @default("Living Room")
+  technicianContact      String?
+  notes                  String?
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
+
+  household   Household           @relation(fields: [householdId], references: [id], onDelete: Cascade)
+  maintenance MaintenanceRecord[]
+  serviceRequests ServiceRequest[]
+}
+
+model MaintenanceRecord {
+  id                    String    @id @default(cuid())
+  assetId               String
+  serviceDate           DateTime  @default(now())
+  serviceType           String    @default("Preventive") // Preventive, Repair, Filter Replacement, Deep Clean, Inspection
+  provider              String?   @default("Urban Company")
+  cost                  Float     @default(0)
+  notes                 String?
+  nextDueRecommendation DateTime?
+  technicianName        String?
+  technicianPhone       String?
+  invoiceDocId          String?
+  createdAt             DateTime  @default(now())
+
+  asset Asset @relation(fields: [assetId], references: [id], onDelete: Cascade)
+}
+
+model Bill {
+  id                 String    @id @default(cuid())
+  householdId        String
+  title              String
+  provider           String    // Tata Power, Adani Electricity, BESCOM, Mahanagar Gas, IGL, Jio Fiber, Airtel
+  category           String    // Electricity, Water, Gas/LPG, Internet, Mobile, DTH, Society Maintenance
+  billingPeriodStart DateTime?
+  billingPeriodEnd   DateTime?
+  billNumber         String?
+  amount             Float
+  dueDate            DateTime
+  paidAt             DateTime?
+  paymentStatus      String    @default("PENDING") // PENDING, PAID, OVERDUE
+  paymentMethod      String?   // UPI, Net Banking, Credit Card, Debit Card, Cash
+  autoPay            Boolean   @default(false)
+  referenceNumber    String?
+  units              Float?
+  consumption        String?   // e.g. "284 kWh", "12 kL"
+  documentId         String?
+  notes              String?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  household Household @relation(fields: [householdId], references: [id], onDelete: Cascade)
+}
+
+model Expense {
+  id            String   @id @default(cuid())
+  householdId   String
+  title         String
+  category      String   // Groceries, Utilities, Maintenance, Domestic Help, Health, Subscriptions, Dining, Transport, Miscellaneous
+  amount        Float
+  date          DateTime @default(now())
+  paymentMethod String   @default("UPI") // UPI, Cash, Card, Net Banking
+  paidBy        String?  @default("Ayush")
+  vendor        String?
+  receiptDocId  String?
+  isAnomaly     Boolean  @default(false)
+  anomalyReason String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  household Household @relation(fields: [householdId], references: [id], onDelete: Cascade)
+}
+
+model Task {
+  id                     String    @id @default(cuid())
+  householdId            String
+  title                  String
+  description            String?
+  priority               String    @default("MEDIUM") // LOW, MEDIUM, HIGH, URGENT
+  dueDate                DateTime?
+  assignedMemberId       String?
+  status                 String    @default("PENDING") // PENDING, IN_PROGRESS, COMPLETED, CANCELLED
+  category               String    @default("General") // Maintenance, Procurement, Chore, Bill Payment, Inspection, Kitchen, Shopping, Cleaning, Errands, Finance, Family
+  completedAt            DateTime?
+  sourceType             String?   // BILL, MAINTENANCE, INVENTORY, DOCUMENT, MANUAL
+  sourceId               String?
+  estimatedCost          Float?
+  aiRecommendedMemberId  String?
+  aiReason               String?
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
+
+  household      Household        @relation(fields: [householdId], references: [id], onDelete: Cascade)
+  assignedMember HouseholdMember? @relation(fields: [assignedMemberId], references: [id], onDelete: SetNull)
+}
+
+model Document {
+  id              String   @id @default(cuid())
+  householdId     String
+  title           String
+  originalName    String
+  fileType        String   // image/jpeg, image/png, application/pdf
+  fileSize        Int      @default(0)
+  storagePath     String?  // local file path or data URI
+  status          String   @default("UPLOADED") // UPLOADED, EXTRACTED, CONFIRMED, REJECTED
+  docType         String   @default("RECEIPT") // RECEIPT, APPLIANCE_INVOICE, UTILITY_BILL, WARRANTY, SERVICE_INVOICE, OTHER
+  rawText         String?
+  extractedJson   String?  // JSON serialized extracted structured data
+  confidenceScore Float    @default(0.95)
+  hash            String?  // SHA-256 for duplicate detection
+  impactAnalysis  String?  // Structured JSON findings, historical trends, proposed actions
+  duplicateOfId   String?  // References duplicate document if matched
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  household   Household            @relation(fields: [householdId], references: [id], onDelete: Cascade)
+  extractions DocumentExtraction[]
+}
+
+model DocumentExtraction {
+  id                 String    @id @default(cuid())
+  documentId         String
+  extractedType      String    // APPLIANCE_INVOICE, UTILITY_BILL, GROCERY_RECEIPT
+  vendorOrBrand      String?
+  invoiceNumber      String?
+  date               DateTime?
+  totalAmount        Float?
+  lineItems          String?   // JSON representation of items/breakdown
+  warrantyMonths     Int?
+  modelNumber        String?
+  downstreamApplied  Boolean   @default(false)
+  downstreamAssetId  String?
+  downstreamBillId   String?
+  downstreamExpenseId String?
+  createdAt          DateTime  @default(now())
+
+  document Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+}
+
+model AIConversation {
+  id          String      @id @default(cuid())
+  householdId String
+  title       String      @default("Household Assistant Session")
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  household Household   @relation(fields: [householdId], references: [id], onDelete: Cascade)
+  messages  AIMessage[]
+}
+
+model AIMessage {
+  id             String         @id @default(cuid())
+  conversationId String
+  role           String         // user, assistant, system
+  content        String
+  toolCalls      String?        // JSON of tools called
+  toolResults    String?        // JSON of results returned
+  createdAt      DateTime       @default(now())
+
+  conversation AIConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+}
+
+model Recommendation {
+  id             String    @id @default(cuid())
+  householdId    String
+  type           String    // PROCUREMENT, MAINTENANCE, BILL_PAYMENT, TASK_ASSIGNMENT, ENERGY_SAVING
+  title          String
+  description    String
+  reason         String?
+  urgency        String    @default("MEDIUM") // LOW, MEDIUM, HIGH
+  status         String    @default("PENDING") // PENDING, APPROVED, REJECTED, EXECUTED
+  metadata       String?   // JSON payload (e.g. recommended item, quantity, estimated price, retailer)
+  estimatedCost  Float?
+  targetEntityId String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  household Household @relation(fields: [householdId], references: [id], onDelete: Cascade)
+}
+
+model ActivityLog {
+  id          String   @id @default(cuid())
+  householdId String
+  actionType  String   // DOCUMENT_EXTRACTED, INVENTORY_UPDATED, TASK_ASSIGNED, BILL_PAID, MAINTENANCE_SCHEDULED, RECOMMENDATION_APPROVED, ASSET_ADDED, EXPENSE_LOGGED
+  title       String
+  description String
+  entityType  String?  // Asset, Bill, Task, Inventory, Document, Recommendation
+  entityId    String?
+  actor       String   @default("AI Assistant") // User, AI Assistant, System
+  metadata    String?  // JSON details
+  createdAt   DateTime @default(now())
+
+  household Household @relation(fields: [householdId], references: [id], onDelete: Cascade)
+}
+
+model CartItem {
+  id              String   @id @default(cuid())
+  householdId     String
+  inventoryItemId String?
+  productName     String
+  brand           String?
+  packSize        String
+  quantity        Int      @default(1)
+  unitPrice       Float
+  totalPrice      Float
+  retailer        String   @default("Swiggy Instamart")
+  retailerUrl     String?
+  variantId       String?
+  skuId           String?
+  spinId          String?
+  comparisonNotes String?
+  valueScore      String?  // e.g. "Selected best value pack based on unit economics"
+  status          String   @default("PENDING_REVIEW") // PENDING_REVIEW, DISMISSED
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  household Household @relation(fields: [householdId], references: [id], onDelete: Cascade)
+}
+
+model CommerceSession {
+  id                  String    @id @default(cuid())
+  householdId         String
+  provider            String    @default("swiggy-instamart")
+  accessToken         String?
+  tokenType           String?   @default("Bearer")
+  expiresAt           DateTime?
+  scope               String?   @default("mcp:tools")
+  selectedAddressId   String?
+  selectedAddressName String?
+  codeVerifier        String?
+  state               String?
+  lastSyncAt          DateTime?
+  metadata            String?   // JSON payload for cached delivery addresses or cart summary
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  household Household @relation(fields: [householdId], references: [id], onDelete: Cascade)
+
+  @@index([householdId])
+  @@index([provider])
+}
+
+model Vendor {
+  id              String             @id @default(cuid())
+  householdId     String
+  name            String
+  businessName    String?
+  category        String             // Kirana / Grocery, Dairy & Milk, Fresh Fruits & Vegetables, AC Repair & Service, Electrician, Plumber, Appliance Technician, Water Can Delivery, Laundry / Ironing, Pest Control
+  phone           String
+  whatsappNumber  String?
+  address         String?
+  area            String?
+  city            String?            @default("Bengaluru")
+  services        String?            // comma-separated or JSON list of services/supplies provided
+  notes           String?
+  rating          Float              @default(4.8)
+  reviewCount     Int                @default(12)
+  isFavourite     Boolean            @default(false)
+  isTrusted       Boolean            @default(true)
+  isDemo          Boolean            @default(false)
+  availability    String             @default("Open Now") // Open Now, Closes 9 PM, Mon-Sat, On Call
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+
+  household       Household          @relation(fields: [householdId], references: [id], onDelete: Cascade)
+  serviceRequests ServiceRequest[]
+  contactLogs     VendorContactLog[]
+
+  @@index([householdId])
+  @@index([category])
+}
+
+model ServiceRequest {
+  id            String    @id @default(cuid())
+  householdId   String
+  vendorId      String
+  assetId       String?
+  issue         String
+  category      String    // AC Repair, Plumbing, Electrical, Appliance Repair, Carpentry, Cleaning, General
+  preferredDate DateTime?
+  preferredTime String?   // Morning (9am-12pm), Afternoon (12pm-4pm), Evening (4pm-8pm)
+  status        String    @default("REQUESTED") // REQUESTED, CONTACTED, SCHEDULED, IN_PROGRESS, COMPLETED, CANCELLED
+  estimatedCost Float?
+  finalCost     Float?
+  notes         String?
+  whatsappUrl   String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  household     Household @relation(fields: [householdId], references: [id], onDelete: Cascade)
+  vendor        Vendor    @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  asset         Asset?    @relation(fields: [assetId], references: [id], onDelete: SetNull)
+
+  @@index([householdId])
+  @@index([vendorId])
+  @@index([assetId])
+}
+
+model VendorContactLog {
+  id          String   @id @default(cuid())
+  householdId String
+  vendorId    String
+  actionType  String   // WHATSAPP_OPENED, CALL_INITIATED, SERVICE_REQUESTED
+  context     String?  // e.g. "Inventory Refill", "AC Repair", "Custom Inquiry"
+  messageSent String?
+  createdAt   DateTime @default(now())
+
+  household   Household @relation(fields: [householdId], references: [id], onDelete: Cascade)
+  vendor      Vendor    @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+
+  @@index([householdId])
+  @@index([vendorId])
+}
+

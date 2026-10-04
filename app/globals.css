@@ -1,0 +1,316 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --background: #f8fafc;
+  --foreground: #0f172a;
+}
+
+.dark {
+  --background: #0b0f19;
+  --foreground: #f8fafc;
+  color-scheme: dark;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* =========================================================
+   HH-OS HIGH-CONTRAST DARK THEME ENGINE
+   ========================================================= */
+
+/* 1. Canvas & Layout Surfaces */
+.dark body {
+  background-color: #0b0f19 !important;
+  color: #f8fafc !important;
+}
+
+.dark .bg-slate-50 {
+  background-color: #0b0f19 !important;
+}
+
+.dark .bg-white {
+  background-color: #121929 !important;
+  color: #f8fafc;
+}
+
+.dark .bg-slate-100 {
+  background-color: #1a2337 !important;
+}
+
+.dark .bg-slate-50\/50,
+.dark .bg-slate-50\/80,
+.dark .bg-slate-50\/40 {
+  background-color: #0e1526 !important;
+}
+
+.dark .bg-white\/90,
+.dark .bg-white\/80 {
+  background-color: #141d30 !important;
+}
+
+/* 2. Elevated Buttons in Dark Mode */
+.dark button.bg-slate-900,
+.dark a.bg-slate-900 {
+  background-color: #1e293b !important;
+  border: 1px solid #334155 !important;
+  color: #ffffff !important;
+}
+
+.dark button.bg-slate-900:hover,
+.dark a.bg-slate-900:hover,
+.dark .hover\:bg-slate-800:hover:not(aside):not(aside *) {
+  background-color: #334155 !important;
+  color: #ffffff !important;
+}
+
+/* 3. Typography & High-Contrast Text Legibility */
+.dark .text-slate-900,
+.dark .text-slate-950 {
+  color: #ffffff !important;
+}
+
+.dark .text-slate-800 {
+  color: #f1f5f9 !important;
+}
+
+.dark .text-slate-700 {
+  color: #e2e8f0 !important;
+}
+
+.dark .text-slate-600 {
+  color: #cbd5e1 !important;
+}
+
+.dark .text-slate-500 {
+  color: #94a3b8 !important;
+}
+
+.dark .text-slate-400 {
+  color: #94a3b8 !important;
+}
+.dark .text-slate-40{
+  color: whitesmoke !important;
+}
+
+/* Colored Texts - Enhanced from dark/muddy tones to bright legible hues */
+.dark .text-teal-700,
+.dark .text-teal-800,
+.dark .text-teal-900,
+.dark .text-teal-950 {
+  color: #2dd4bf !important;
+}
+
+.dark .text-emerald-700,
+.dark .text-emerald-800,
+.dark .text-emerald-900,
+.dark .text-emerald-950 {
+  color: #34d399 !important;
+}
+
+.dark .text-rose-600,
+.dark .text-rose-700,
+.dark .text-rose-800,
+.dark .text-rose-900,
+.dark .text-rose-950,
+.dark .text-red-600,
+.dark .text-red-700,
+.dark .text-red-800 {
+  color: #fb7185 !important;
+}
+
+.dark .text-amber-600,
+.dark .text-amber-700,
+.dark .text-amber-800,
+.dark .text-amber-900,
+.dark .text-amber-950 {
+  color: #fbbf24 !important;
+}
+
+.dark .text-orange-600,
+.dark .text-orange-700,
+.dark .text-orange-800,
+.dark .text-orange-900,
+.dark .text-orange-950 {
+  color: #fb923c !important;
+}
+
+.dark .text-blue-600,
+.dark .text-blue-700,
+.dark .text-blue-800,
+.dark .text-blue-900,
+.dark .text-blue-950 {
+  color: #60a5fa !important;
+}
+
+.dark .text-purple-600,
+.dark .text-purple-700,
+.dark .text-purple-800,
+.dark .text-purple-900,
+.dark .text-indigo-600,
+.dark .text-indigo-700,
+.dark .text-indigo-800 {
+  color: #c084fc !important;
+}
+
+/* 4. Form Controls, Inputs & Selects */
+.dark input[type="text"],
+.dark input[type="password"],
+.dark input[type="number"],
+.dark input[type="date"],
+.dark input[type="search"],
+.dark select,
+.dark textarea {
+  background-color: #151d2f !important;
+  border-color: #27354f !important;
+  color: #ffffff !important;
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: #64748b !important;
+}
+
+.dark select option {
+  background-color: #121929;
+  color: #f8fafc;
+}
+
+/* 5. Header & Fixed Nav */
+.dark header {
+  background-color: #0d1424 !important;
+  border-color: #1e293b !important;
+}
+
+/* 6. Modals, Dialogs & Cards */
+.dark .bg-white.rounded-xl.shadow-xl,
+.dark .bg-white.rounded-2xl,
+.dark .bg-white.rounded-xl {
+  background-color: #121929 !important;
+  border-color: #1e293b !important;
+  color: #f8fafc !important;
+}
+
+.dark .bg-black\/40,
+.dark .bg-slate-900\/40 {
+  background-color: rgba(0, 0, 0, 0.75) !important;
+}
+
+/* 7. Hover States */
+.dark .hover\:bg-slate-50:hover {
+  background-color: #172238 !important;
+}
+
+.dark .hover\:bg-slate-100:hover {
+  background-color: #1c2842 !important;
+}
+
+.dark .hover\:border-slate-300:hover {
+  border-color: #334155 !important;
+}
+
+/* 8. Badges, Pills & Status Containers */
+.dark .bg-teal-50,
+.dark .bg-teal-100 {
+  background-color: rgba(13, 148, 136, 0.18) !important;
+  border-color: rgba(45, 212, 191, 0.35) !important;
+}
+
+.dark .bg-emerald-50,
+.dark .bg-emerald-100 {
+  background-color: rgba(16, 185, 129, 0.18) !important;
+  border-color: rgba(52, 211, 153, 0.35) !important;
+}
+
+.dark .bg-rose-50,
+.dark .bg-rose-100 {
+  background-color: rgba(244, 63, 94, 0.18) !important;
+  border-color: rgba(251, 113, 133, 0.35) !important;
+}
+
+.dark .bg-amber-50,
+.dark .bg-amber-100 {
+  background-color: rgba(245, 158, 11, 0.18) !important;
+  border-color: rgba(251, 191, 36, 0.35) !important;
+}
+
+.dark .bg-orange-50,
+.dark .bg-orange-100 {
+  background-color: rgba(249, 115, 22, 0.18) !important;
+  border-color: rgba(251, 146, 60, 0.35) !important;
+}
+
+.dark .bg-blue-50,
+.dark .bg-blue-100 {
+  background-color: rgba(59, 130, 246, 0.18) !important;
+  border-color: rgba(96, 165, 250, 0.35) !important;
+}
+
+.dark .bg-purple-50,
+.dark .bg-purple-100 {
+  background-color: rgba(168, 85, 247, 0.18) !important;
+  border-color: rgba(192, 132, 252, 0.35) !important;
+}
+
+/* 9. Glowing Banner Gradients */
+.dark [class*="bg-gradient-to-r"][class*="from-rose-50"],
+.dark [class*="bg-gradient-to-r"][class*="from-amber-50"] {
+  background: linear-gradient(to right, rgba(225, 29, 72, 0.15), rgba(217, 119, 6, 0.15), rgba(234, 88, 12, 0.15)) !important;
+  border-color: rgba(244, 63, 94, 0.3) !important;
+}
+
+/* 10. Tables & Dividing Borders */
+.dark thead.bg-slate-50,
+.dark thead {
+  background-color: #0d1527 !important;
+}
+
+.dark th {
+  color: #cbd5e1 !important;
+}
+
+.dark tr.hover\:bg-slate-50\/50:hover,
+.dark tr:hover {
+  background-color: #172238 !important;
+}
+
+.dark .border-slate-200,
+.dark .border-slate-300 {
+  border-color: #1e293b !important;
+}
+
+.dark .border-slate-100 {
+  border-color: #172033 !important;
+}
+
+.dark .divide-slate-100 > * + * {
+  border-color: #172033 !important;
+}
+
+.dark .divide-slate-200 > * + * {
+  border-color: #1e293b !important;
+}
+
+/* 11. AI Assistant Chat Bubbles */
+.dark .bg-slate-900.rounded-br-xs,
+.dark .bg-slate-900.rounded-2xl {
+  background-color: #1e293b !important;
+  border: 1px solid #334155 !important;
+  color: #ffffff !important;
+}
+
+/* 12. Shadows */
+.dark .shadow-xs,
+.dark .shadow-sm {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.5) !important;
+}
+
+.dark .shadow-xl,
+.dark .shadow-2xl {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.7), 0 8px 10px -6px rgba(0, 0, 0, 0.6) !important;
+}
