@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSwiggyAuthorizationUrl } from "@/lib/integrations/commerce/swiggy-instamart/auth";
+import { getPublicOrigin } from "@/lib/utils/public-origin";
 
 export async function GET(req: NextRequest) {
   try {
-    const origin = req.nextUrl.origin || "http://localhost:3000";
+    const origin = getPublicOrigin(req);
     const redirectUri = `${origin}/api/auth/swiggy/callback`;
 
     const { url, state } = await getSwiggyAuthorizationUrl(redirectUri);

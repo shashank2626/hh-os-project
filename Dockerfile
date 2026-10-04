@@ -14,6 +14,7 @@ COPY . .
 # The committed SQLite database provides the seeded demo state. The runtime can
 # override DATABASE_URL later when a durable managed database is configured.
 ENV DATABASE_URL="file:./dev.db"
+ENV PUBLIC_APP_URL="https://hhos-bv5ujk65.manus.space"
 RUN npx prisma generate && npm run build
 
 ENV NODE_ENV=production

@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { exchangeSwiggyCode } from "@/lib/integrations/commerce/swiggy-instamart/auth";
+import { getPublicOrigin } from "@/lib/utils/public-origin";
 
 export async function GET(req: NextRequest) {
   try {
-    const origin = req.nextUrl.origin || "http://localhost:3000";
+    const origin = getPublicOrigin(req);
     const redirectUri = `${origin}/api/auth/swiggy/callback`;
     const code = req.nextUrl.searchParams.get("code");
     const state = req.nextUrl.searchParams.get("state") || "";
@@ -28,7 +29,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.redirect(`${origin}/assistant?swiggy_connected=true`);
   } catch (err: any) {
     console.error("[Swiggy Callback] Exchange failed:", err);
-    const origin = req.nextUrl.origin || "http://localhost:3000";
+    const origin = getPublicOrigin(req);
     return NextResponse.redirect(
       `${origin}/assistant?swiggy_error=${encodeURIComponent(err.message || "Token exchange failed")}`
     );
