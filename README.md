@@ -121,7 +121,7 @@ Open **[http://localhost:3000](http://localhost:3000)** in your browser.
 
 ## 🌐 Public Deployment
 
-The current production deployment is available at **[hhos-bv5ujk65.manus.space](https://hhos-bv5ujk65.manus.space)**.
+The current production deployment is available at **[household-os-8nke.vercel](https://household-os-8nke.vercel.app/)**.
 
 The repository includes the production container definition, managed hosting route manifest, and deployment notes. The hosted demo uses the seeded SQLite database; migrate to durable managed database storage before using it for persistent real-world household data.
 
